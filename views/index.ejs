@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>WebSockets</title>
+            <link href="/main.css" rel="stylesheet" type="text/css">
+        </head>
+    <body>
+        <h1>DADOS DO ARDUINO</h1>
+        <p>Pressione um botao do Arduino para mudar a cor dos quadrados</p>
+        <p>The button is <span id="button-state"></span> </p>
+        <svg width="120" height="120" viewBox="0 0 120 120">
+            <rect id="change-color"
+            fill="LightSkyBlue"
+            width="120"
+            height="120"
+        />
+        </svg>
+
+        <div>
+            <h1>ENVIA DADOS PARA O ARDUINO</h1>
+            <p>Digite um comando abaixo (a = 60, b = 70): </p>
+            <br>
+            <p>Você digitou: <span id="input-value"></span></p>
+            <p id="messages"></p>
+            <br>
+            <form id="form" action="">
+                <input id="input" autocomplete="off" /><button>Send</button>
+            </form>
+        </div>
+        <script src="https://cdn.socket.io/4.4.1/socket.io.js"></script>
+        <script>
+            var socket = io('wss://191.45.108.235:443');
+            var current = "0";
+            var shape = document.getElementById('change-color');
+            var buttonState = document.getElementById('button-state');
+            var colorArray = ["LightSkyBlye", "LightSkyGray", "DarkOliveGreen", "orange",
+                "DarkRed", "gold", "purple"];
+            
+            var inputvalue = document.getElementById('input-value');
+            var messages = document.getElementById('messages');
+            var form = document.getElementById('form');
+            var input = document.getElementById('input');
+
+            socket.on("data", function(data){
+                if (data){
+                    buttonState.innerHTML = "pressed";
+                    if (data!= current) {
+                        var newColor = colorArray[Math.floor(Math.random()*colorArray.length)];
+                        shape.style.fill = newColor;
+                    }
+                } else {
+                    buttonState.innterHTML = "not pressed";
+                }
+                current = data;
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                switch(input.value) {
+                    case 'a':
+                        socket.emit('a', 'a');
+                        input.value = '';
+                        break;
+                    case 'b': 
+                        socket.emit('b', 'b');
+                        input.value = '';
+                        break;
+                    case 'c':
+                        socket.emit('c', 'c');
+                        input.value = '';
+                        break;
+                    default:
+                    messages.innerHTML = 'Você deve digitar \"a\", \"b\" ou \"c\" amiguinho';
+                    var item = String(input.value);
+                    inputvalue.innerHTML = item;
+                    break;
+                }    
+            });
+
+        </script>
+    </body>
+</html>

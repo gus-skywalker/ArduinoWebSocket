@@ -1,0 +1,18 @@
+{
+  "name": "websocket",
+  "version": "1.0.0",
+  "description": "Software de integracao Arduino e Web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gustavo Damasceno",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "serialport": "^10.4.0",
+    "socket.io": "^4.0.1"
+  }
+}
